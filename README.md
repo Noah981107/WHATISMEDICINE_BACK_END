@@ -1,0 +1,2 @@
+# WHATISMEDICINE_BACK_END
+이약뭐약 프로젝트 Back-End
