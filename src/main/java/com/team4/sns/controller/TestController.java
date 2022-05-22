@@ -26,6 +26,6 @@ public class TestController {
     @GetMapping(value ="/image/test")
     public ResponseEntity<String> uploadImageTest(@RequestParam("images") List<MultipartFile> imageFileList) throws IOException {
         testService.uploadImageTest(imageFileList);
-        return new ResponseEntity<>("success", HttpStatus.CREATED);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }
