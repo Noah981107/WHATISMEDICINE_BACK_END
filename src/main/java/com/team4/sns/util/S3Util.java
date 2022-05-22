@@ -52,6 +52,7 @@ public class S3Util {
 
             URL reportUrl = s3Client.utilities().getUrl(GetUrlRequest.builder().bucket(bucketName).key(translatedImageName).build());
             uploadedImageUrl.add(reportUrl.toString());
+            System.out.println(uploadedImageUrl);
         }
         return uploadedImageUrl;
     }
