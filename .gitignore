@@ -41,3 +41,30 @@ src/main/resources*/*.properties
 src/main/resources/*.json
 src/main/resources/static/*.json
 src/main/resources/static/*.p8
+
+### Flask ###
+.DS_Store
+.env
+.flaskenv
+*.pyc
+*.pyo
+env/
+venv/
+.venv/
+env*
+dist/
+build/
+*.egg
+*.egg-info/
+.tox/
+.cache/
+.pytest_cache/
+.idea/
+docs/_build/
+.vscode
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+*,cover
