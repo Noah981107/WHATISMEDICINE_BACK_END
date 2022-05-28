@@ -2,7 +2,7 @@ from flask import Flask, request, Response
 import json
 
 from exception.s3_exception_class import s3Exception
-from util import s3
+from util import s3, file_name_changer
 from service import color_service
 
 app = Flask(__name__)
@@ -28,10 +28,10 @@ def upload_image():
     file = request.files['file']
 
     connected_s3 = s3.s3_connection()
-    s3.s3_put_object(connected_s3, file, file.filename)
-    s3_image_url = s3.s3_get_image_url(connected_s3, file.filename)
+    changed_file_name = file_name_changer.change_user_uploaded_file_name(file.filename)
+    s3.s3_put_object(connected_s3, file, changed_file_name)
+    s3_image_url = s3.s3_get_image_url(connected_s3, changed_file_name)
 
-    print("s3_image_url : ", s3_image_url)
     color = color_service.get_color_from_file(s3_image_url)
     print("color : ", color)
 
