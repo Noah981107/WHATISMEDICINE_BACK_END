@@ -43,8 +43,6 @@ def s3_put_object(s3, file, file_name):
             errorMessage.S3_PUT_OBJECT_ERROR.message,
             errorMessage.S3_PUT_OBJECT_ERROR.error_code
         )
-    return True
-
 
 def s3_get_image_url(s3, file_name):
     location = s3.get_bucket_location(
