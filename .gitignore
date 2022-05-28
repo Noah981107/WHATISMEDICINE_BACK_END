@@ -68,3 +68,6 @@ htmlcov/
 .coverage
 .coverage.*
 *,cover
+
+### config ###
+config.ini
