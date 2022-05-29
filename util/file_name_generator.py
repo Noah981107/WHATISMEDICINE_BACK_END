@@ -10,3 +10,10 @@ def change_user_uploaded_file_name(file_name):
     suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
     changed_file_name = "_".join([real_file_name, suffix]) + '.jpg'
     return changed_file_name
+
+
+def make_detected_image_name():
+    base_name = "Image"
+    suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+    result_image_name = "_".join([base_name, suffix]) + '.jpg'
+    return result_image_name

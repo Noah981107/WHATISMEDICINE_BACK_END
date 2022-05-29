@@ -2,8 +2,11 @@ import cv2
 import numpy as np
 import requests
 import matplotlib.pyplot as plt
+import os
 
 from enums import color_enum
+from util import config_parser, file_name_generator
+from service import s3_service
 
 
 def validation(mask):
@@ -15,8 +18,6 @@ def validation(mask):
 
 
 def get_color_from_file(image_url):
-
-    color_result = ()
 
     image_nparray = np.asarray(bytearray(requests.get(image_url).content), dtype=np.uint8)
     image = cv2.imdecode(image_nparray, cv2.IMREAD_COLOR)
@@ -70,12 +71,33 @@ def get_color_from_file(image_url):
                  color_enum.colorEnum.PURPLE.name: mask_purple,
                  color_enum.colorEnum.GRAY.name: mask_gray}
 
+    is_detected = False
+    color_result = ()
+
     for key, value in mask_imgs.items():
         if validation(value):
             for color_enum_color in color_enum.colorEnum:
                 if key == color_enum_color.name:
-                    # plt.imshow(value)
-                    # plt.show()
-                    color_result = (color_enum_color.color_name, color_enum_color.code)
+                    is_detected = True
 
-    return color_result
+                    BASE_DIR = os.getcwd()
+                    IMAGE_DIR = os.path.join(BASE_DIR, 'color')
+                    detected_color_image_name = file_name_generator.make_detected_image_name()
+                    file_path = os.path.join(IMAGE_DIR, detected_color_image_name)
+                    plt.imshow(value)
+                    plt.savefig(file_path)
+
+                    with open(file_path, 'rb') as data:
+                        uploaded_detected_color_image_url = s3_service.upload_detected_color_image(data, detected_color_image_name)
+
+                    color_result = (uploaded_detected_color_image_url, color_enum_color.color_name, color_enum_color.code)
+
+    if is_detected:
+        return color_result
+    else:
+        not_detected_color_result = (
+            'https://' + config_parser.get_s3_bucket_name() + '.s3.'
+            + config_parser.get_s3_region_name() + '.amazonaws.com/' + config_parser.get_s3_template_folder_name() + '/'
+            + 'no_result.jpg', '', ''
+        )
+        return not_detected_color_result
