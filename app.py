@@ -2,7 +2,7 @@ from flask import Flask, request, Response
 import json
 
 from exception.s3_exception_class import s3Exception
-from util import s3
+from service import s3_service, color_service
 
 app = Flask(__name__)
 
@@ -12,14 +12,22 @@ def hello_world():
     return 'Hello World!'
 
 
+@app.route('/upload-test', methods=['POST'])
+def upload_image_test():
+    file = request.files['file']
+    s3_service.upload_to_s3_user_uploaded_file(file)
+    return 'upload-test'
+
+
 @app.route('/upload', methods=['POST'])
 def upload_image():
     file = request.files['file']
-    connected_s3 = s3.s3_connection()
-    if s3.s3_put_object(connected_s3, file, file.filename):
-        return s3.s3_get_image_url(connected_s3, file.filename)
-    else:
-        return "Failed"
+
+    s3_image_url = s3_service.upload_to_s3_user_uploaded_file(file)
+    color = color_service.get_color_from_file(s3_image_url)
+    print("color : ", color)
+
+    return 'hello'
 
 
 @app.errorhandler(s3Exception)

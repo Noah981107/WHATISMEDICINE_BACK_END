@@ -37,13 +37,32 @@ def s3_put_object(s3, file, file_name):
             ContentType=file.content_type,
             ACL='public-read'
         )
-    except Exception:
+    except Exception as e:
+        print(e)
         raise s3_exception_class.s3Exception(
             errorMessage.S3_PUT_OBJECT_ERROR.name,
             errorMessage.S3_PUT_OBJECT_ERROR.message,
             errorMessage.S3_PUT_OBJECT_ERROR.error_code
         )
-    return True
+
+
+def s3_put_color_pyplot_image(s3, file, file_name):
+    try:
+        print("file : ", file)
+        s3.put_object(
+            Body=file,
+            Bucket=config_parser.get_s3_bucket_name(),
+            Key=f'{config_parser.get_s3_color_folder_name()}/{file_name}',
+            ContentType='image/jpg',
+            ACL='public-read'
+        )
+    except Exception as e:
+        print(e)
+        raise s3_exception_class.s3Exception(
+            errorMessage.S3_PUT_OBJECT_ERROR.name,
+            errorMessage.S3_PUT_OBJECT_ERROR.message,
+            errorMessage.S3_PUT_OBJECT_ERROR.error_code
+        )
 
 
 def s3_get_image_url(s3, file_name):
