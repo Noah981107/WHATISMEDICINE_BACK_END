@@ -26,3 +26,7 @@ def get_s3_template_folder_name():
 
 def get_s3_color_folder_name():
     return properties['s3']['color_folder_name']
+
+
+def get_s3_ocr_folder_name():
+    return properties['s3']['ocr_folder_name']

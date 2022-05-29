@@ -28,7 +28,7 @@ def get_text_from_file(image_url):
     plt.savefig(file_path)
 
     with open(file_path, 'rb') as data:
-        uploaded_detected_color_image_url = s3_service.upload_detected_color_image(data, detected_color_image_name)
+        uploaded_detected_color_image_url = s3_service.upload_detected_ocr_image(data, detected_color_image_name)
 
     spacer = 100
     detected_ocr_result = []
