@@ -49,5 +49,6 @@ def get_text_from_file(image_url):
         return not_detected_ocr_result
     else:
         txt = ' '.join(detected_ocr_result)
+        txt = txt.replace(' ', '%20')
         ocr_result = (uploaded_detected_color_image_url, txt)
         return ocr_result
