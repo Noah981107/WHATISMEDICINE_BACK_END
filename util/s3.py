@@ -48,7 +48,6 @@ def s3_put_object(s3, file, file_name):
 
 def s3_put_color_pyplot_image(s3, file, file_name):
     try:
-        print("file : ", file)
         s3.put_object(
             Body=file,
             Bucket=config_parser.get_s3_bucket_name(),
@@ -72,3 +71,13 @@ def s3_get_image_url(s3, file_name):
 
     encoded_file_name = urllib.parse.quote(file_name)
     return "https://" + config_parser.get_s3_bucket_name() + ".s3." + location + ".amazonaws.com/" + encoded_file_name
+
+
+def s3_get_color_image_url(s3, file_name):
+    location = s3.get_bucket_location(
+        Bucket=config_parser.get_s3_bucket_name()
+    )["LocationConstraint"]
+
+    encoded_file_name = urllib.parse.quote(file_name)
+    return "https://" + config_parser.get_s3_bucket_name() + ".s3." + location + ".amazonaws.com/" \
+           + config_parser.get_s3_color_folder_name() + '/' + encoded_file_name

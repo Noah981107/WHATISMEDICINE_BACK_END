@@ -2,7 +2,7 @@ from flask import Flask, request, Response
 import json
 
 from exception.s3_exception_class import s3Exception
-from service import s3_service, color_service
+from service import s3_service, color_service, ocr_service
 
 app = Flask(__name__)
 
@@ -26,6 +26,9 @@ def upload_image():
     s3_image_url = s3_service.upload_to_s3_user_uploaded_file(file)
     color = color_service.get_color_from_file(s3_image_url)
     print("color : ", color)
+
+    ocr = ocr_service.get_text_from_file(s3_image_url)
+    print('ocr : ', ocr)
 
     return 'hello'
 
