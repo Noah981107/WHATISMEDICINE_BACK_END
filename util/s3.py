@@ -64,6 +64,24 @@ def s3_put_color_pyplot_image(s3, file, file_name):
         )
 
 
+def s3_put_ocr_pyplot_image(s3, file, file_name):
+    try:
+        s3.put_object(
+            Body=file,
+            Bucket=config_parser.get_s3_bucket_name(),
+            Key=f'{config_parser.get_s3_ocr_folder_name()}/{file_name}',
+            ContentType='image/jpg',
+            ACL='public-read'
+        )
+    except Exception as e:
+        print(e)
+        raise s3_exception_class.s3Exception(
+            errorMessage.S3_PUT_OBJECT_ERROR.name,
+            errorMessage.S3_PUT_OBJECT_ERROR.message,
+            errorMessage.S3_PUT_OBJECT_ERROR.error_code
+        )
+
+
 def s3_get_image_url(s3, file_name):
     location = s3.get_bucket_location(
         Bucket=config_parser.get_s3_bucket_name()
@@ -81,3 +99,14 @@ def s3_get_color_image_url(s3, file_name):
     encoded_file_name = urllib.parse.quote(file_name)
     return "https://" + config_parser.get_s3_bucket_name() + ".s3." + location + ".amazonaws.com/" \
            + config_parser.get_s3_color_folder_name() + '/' + encoded_file_name
+
+
+def s3_get_ocr_image_url(s3, file_name):
+    location = s3.get_bucket_location(
+        Bucket=config_parser.get_s3_bucket_name()
+    )["LocationConstraint"]
+
+    encoded_file_name = urllib.parse.quote(file_name)
+    return "https://" + config_parser.get_s3_bucket_name() + ".s3." + location + ".amazonaws.com/" \
+           + config_parser.get_s3_ocr_folder_name() + '/' + encoded_file_name
+
