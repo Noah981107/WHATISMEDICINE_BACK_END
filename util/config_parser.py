@@ -30,3 +30,7 @@ def get_s3_color_folder_name():
 
 def get_s3_ocr_folder_name():
     return properties['s3']['ocr_folder_name']
+
+
+def get_s3_drug_folder_name():
+    return properties['s3']['drug_folder_name']
