@@ -2,7 +2,7 @@ from flask import Flask, request, Response
 import json
 
 from exception.s3_exception_class import s3Exception
-from service import s3_service, color_service, ocr_service, search_service
+from service import s3_service, color_service, ocr_service, search_service, shape_service
 
 app = Flask(__name__)
 
@@ -24,14 +24,14 @@ def upload_image():
     file = request.files['file']
 
     s3_image_url = s3_service.upload_to_s3_user_uploaded_file(file)
+    print('s3 image url : ', s3_image_url)
 
-    # Todo : 도형인식 추가하기
-    shape_image_url = 'https://info-medicine.s3.ap-northeast-2.amazonaws.com/template/no_result.jpg'
-    shape_name = '원형'
-    shape_code = ''
-
+    shape_image_url, shape_name, shape_code = map(str, shape_service.get_shape_from_file(s3_image_url))
+    print('shape : ', shape_image_url, shape_name, shape_code)
     color_image_url, color_name, color_code = map(str, color_service.get_color_from_file(s3_image_url))
+    print('color : ', color_image_url, color_name, color_code)
     ocr_image_url, ocr_result = map(str, ocr_service.get_text_from_file(s3_image_url))
+    print('ocr : ', ocr_image_url, ocr_result)
 
     result_json = search_service.search_drugs(shape_image_url, shape_name, color_image_url, color_name, ocr_image_url,
                                               shape_code, color_code, ocr_result)
