@@ -24,6 +24,10 @@ def get_s3_template_folder_name():
     return properties['s3']['template_folder_name']
 
 
+def get_s3_shape_folder_name():
+    return properties['s3']['shape_folder_name']
+
+
 def get_s3_color_folder_name():
     return properties['s3']['color_folder_name']
 

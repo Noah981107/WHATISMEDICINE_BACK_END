@@ -32,7 +32,6 @@ def get_text_from_file(image_url):
 
     spacer = 100
     detected_ocr_result = []
-    ocr_result = ()
 
     for detection in result:
         text = detection[1]
