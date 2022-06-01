@@ -71,5 +71,3 @@ htmlcov/
 
 ### config ###
 config.ini
-color/*
-ocr/*
