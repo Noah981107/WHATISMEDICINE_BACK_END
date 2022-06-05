@@ -2,7 +2,7 @@ from flask import Flask, request, Response
 import json
 
 from exception.s3_exception_class import s3Exception
-from service import s3_service, color_service, ocr_service, search_service, shape_service
+from service import s3_service, color_service, ocr_service, search_service, shape_service, background_removal_service
 
 app = Flask(__name__)
 
@@ -26,11 +26,14 @@ def upload_image():
     s3_image_url = s3_service.upload_to_s3_user_uploaded_file(file)
     print('s3 image url : ', s3_image_url)
 
-    shape_image_url, shape_name, shape_code = map(str, shape_service.get_shape_from_file(s3_image_url))
+    background_removal_image_url = background_removal_service.image_background_removal(s3_image_url)
+    print('back ground removal image url : ', background_removal_image_url)
+
+    shape_image_url, shape_name, shape_code = map(str, shape_service.get_shape_from_file(background_removal_image_url))
     print('shape : ', shape_image_url, shape_name, shape_code)
-    color_image_url, color_name, color_code = map(str, color_service.get_color_from_file(s3_image_url))
+    color_image_url, color_name, color_code = map(str, color_service.get_color_from_file(background_removal_image_url))
     print('color : ', color_image_url, color_name, color_code)
-    ocr_image_url, ocr_result = map(str, ocr_service.get_text_from_file(s3_image_url))
+    ocr_image_url, ocr_result = map(str, ocr_service.get_text_from_file(background_removal_image_url))
     print('ocr : ', ocr_image_url, ocr_result)
 
     result_json = search_service.search_drugs(shape_image_url, shape_name, color_image_url, color_name, ocr_image_url,

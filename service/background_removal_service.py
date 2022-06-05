@@ -1,25 +1,23 @@
 import cv2
 import numpy as np
 from rembg.bg import remove
-import io
-from PIL import Image, ImageFile
+import requests
 
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+from util import file_name_generator
+from service import s3_service
 
 
-def image_background_removal():
-    input_path = 'service/person.png'
-    output_path = 'out.png'
+def image_background_removal(image_url):
 
-    f = np.fromfile(input_path)
-    print('f : ', f)
-    result = remove(f)
-    print('result type: ', type(result))
+    image_nparray = np.asarray(bytearray(requests.get(image_url).content), dtype=np.uint8)
+    image = cv2.imdecode(image_nparray, cv2.IMREAD_COLOR)
 
-    data_io = io.BytesIO(result)
-    print('data io type : ', type(data_io))
+    output = remove(image)
+    image_name = file_name_generator.make_detected_image_name()
+    file_path = 'background/' + image_name
+    cv2.imwrite(file_path, output)
 
-    img = Image.open(data_io).convert("RGBA")
-    img.save(output_path)
+    with open(file_path, 'rb') as data:
+        return s3_service.upload_background_removal_image(data, image_name)
 
-    return 'test'
+
