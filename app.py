@@ -2,13 +2,15 @@ from flask import Flask, request, Response
 import json
 
 from exception.s3_exception_class import s3Exception
-from service import s3_service, color_service, ocr_service, search_service, shape_service
+from service import s3_service, color_service, ocr_service, search_service, shape_service, background_removal_service
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def hello_world():
+    url = 'https://info-medicine.s3.ap-northeast-2.amazonaws.com/car.jpg'
+    background_removal_service.image_background_removal(url)
     return 'Hello World!'
 
 

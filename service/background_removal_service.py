@@ -1,25 +1,15 @@
 import cv2
 import numpy as np
 from rembg.bg import remove
-import io
-from PIL import Image, ImageFile
-
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+import requests
 
 
-def image_background_removal():
-    input_path = 'service/person.png'
-    output_path = 'out.png'
+def image_background_removal(image_url):
 
-    f = np.fromfile(input_path)
-    print('f : ', f)
-    result = remove(f)
-    print('result type: ', type(result))
+    image_nparray = np.asarray(bytearray(requests.get(image_url).content), dtype=np.uint8)
+    image = cv2.imdecode(image_nparray, cv2.IMREAD_COLOR)
 
-    data_io = io.BytesIO(result)
-    print('data io type : ', type(data_io))
-
-    img = Image.open(data_io).convert("RGBA")
-    img.save(output_path)
+    output2 = remove(image)
+    cv2.imwrite('output2.png', output2)
 
     return 'test'
