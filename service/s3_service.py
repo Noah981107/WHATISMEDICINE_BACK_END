@@ -9,6 +9,13 @@ def upload_to_s3_user_uploaded_file(file):
     return s3_image_url
 
 
+def upload_background_removal_image(file, file_name):
+    connected_s3 = s3.s3_connection()
+    s3.s3_put_object(connected_s3, file, file_name)
+    s3_image_url = s3.s3_get_image_url(connected_s3, file_name)
+    return s3_image_url
+
+
 def upload_detected_shape_image(file, file_name):
     connected_s3 = s3.s3_connection()
     s3.s3_put_shape_pyplot_image(connected_s3, file, file_name)

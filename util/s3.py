@@ -34,7 +34,7 @@ def s3_put_object(s3, file, file_name):
             Body=file,
             Bucket=config_parser.get_s3_bucket_name(),
             Key=file_name,
-            ContentType=file.content_type,
+            ContentType='image/png',
             ACL='public-read'
         )
     except Exception as e:
