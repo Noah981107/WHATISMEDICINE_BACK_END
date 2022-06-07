@@ -41,6 +41,8 @@ def upload_image():
     result_json = search_service.search_drugs(shape_image_url, shape_name, color_image_url, color_name, ocr_image_url,
                                               shape_code, color_code, ocr_result)
 
+    print(result_json)
+
     return Response(result_json, mimetype='application/json', status=200)
 
 
