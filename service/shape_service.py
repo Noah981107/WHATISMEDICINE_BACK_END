@@ -24,8 +24,10 @@ def convex(image_url):
     box = np.int0(box)
 
     cv2.drawContours(image, [box], 0, (0, 255, 0), 3)
-
-    return rect[1][0] / rect[1][1]
+    if rect[1][1] == 0:
+        return 0.9
+    else:
+        return rect[1][0] / rect[1][1]
 
 
 def get_shape_from_file(image_url):
