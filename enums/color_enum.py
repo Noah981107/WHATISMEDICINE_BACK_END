@@ -9,7 +9,7 @@ class colorEnum(Enum):
     RED = ('빨강', 64)
     BROWN = ('갈색', 1)
     GREEN = ('초록', 128)
-    TURQUOISE = ('청록', 1024)
+    TURQUOISE = ('청록', 128)
     BLUE = ('파랑', 8196)
     PURPLE = ('보라', 16)
     GRAY = ('회색', 32768)
