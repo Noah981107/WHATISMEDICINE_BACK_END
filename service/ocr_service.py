@@ -9,7 +9,7 @@ from util import file_name_generator, config_parser
 
 
 def get_text_from_file(image_url):
-    reader = easyocr.Reader(['ko', 'en'])
+    reader = easyocr.Reader(['en'])
     result = reader.readtext(image_url)
     top_left = tuple(result[0][0][0])
     bottom_right = tuple(result[0][0][2])
