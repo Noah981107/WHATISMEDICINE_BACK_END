@@ -12,7 +12,7 @@ from service import s3_service
 def validation(mask):
     mask = np.array(mask)
     for i in range(len(mask)):
-        if mask[i].sum() > 65000:
+        if mask[i].sum() > 25000:
             return True
     return False
 
