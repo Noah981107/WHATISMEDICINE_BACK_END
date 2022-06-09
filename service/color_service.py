@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import cv2
 import numpy as np
 import requests
@@ -12,7 +14,7 @@ from service import s3_service
 def validation(mask):
     mask = np.array(mask)
     for i in range(len(mask)):
-        if mask[i].sum() > 25000:
+        if mask[i].sum() > 10000:
             return True
     return False
 

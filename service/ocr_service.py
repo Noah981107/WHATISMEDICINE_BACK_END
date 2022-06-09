@@ -3,6 +3,8 @@ import cv2
 import matplotlib.pyplot as plt
 import matplotlib.image as img
 import os
+import matplotlib
+matplotlib.use('Agg')
 
 from service import s3_service
 from util import file_name_generator, config_parser

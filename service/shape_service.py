@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import requests
+import matplotlib
+matplotlib.use('Agg')
 
 from enums import shape_enum
 from util import file_name_generator, config_parser
@@ -17,7 +19,10 @@ def convex(image_url):
     ret, thr = cv2.threshold(imgray, 127, 255, 0)
     contours, _ = cv2.findContours(thr, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    cnt = contours[0]
+    try:
+        cnt = contours[0]
+    except Exception:
+        return 0.9
     x, y, w, h = cv2.boundingRect(cnt)
     rect = cv2.minAreaRect(cnt)
     box = cv2.boxPoints(rect)
