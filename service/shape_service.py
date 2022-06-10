@@ -3,16 +3,39 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import requests
+import matplotlib
+matplotlib.use('Agg')
 
 from enums import shape_enum
 from util import file_name_generator, config_parser
 from service import s3_service
 
 
-def get_shape_from_file(image_url):
-    # img_input = cv2.imread(image_url, cv2.IMREAD_COLOR)
-    # img_gray = cv2.cvtColor(img_input, cv2.COLOR_BGR2GRAY)
+def convex(image_url):
+    image_nparray = np.asarray(bytearray(requests.get(image_url).content), dtype=np.uint8)
+    image = cv2.imdecode(image_nparray, cv2.IMREAD_COLOR)
 
+    imgray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret, thr = cv2.threshold(imgray, 127, 255, 0)
+    contours, _ = cv2.findContours(thr, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    try:
+        cnt = contours[0]
+    except Exception:
+        return 0.9
+    x, y, w, h = cv2.boundingRect(cnt)
+    rect = cv2.minAreaRect(cnt)
+    box = cv2.boxPoints(rect)
+    box = np.int0(box)
+
+    cv2.drawContours(image, [box], 0, (0, 255, 0), 3)
+    if rect[1][1] == 0:
+        return 0.9
+    else:
+        return rect[1][0] / rect[1][1]
+
+
+def get_shape_from_file(image_url):
     image_nparray = np.asarray(bytearray(requests.get(image_url).content), dtype=np.uint8)
     image = cv2.imdecode(image_nparray, cv2.IMREAD_COLOR)
     img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -55,28 +78,31 @@ def get_shape_from_file(image_url):
                 length = cv2.arcLength(circle_contours[0], True)
 
             for contour in circle_contours:
-                # cv2.drawContours(img_input, [contour], -1, (255, 0, 255), 2)
-                # cv2.drawContours(img_gray, [contour], -1, (255, 0, 255), 2)
                 cv2.drawContours(img_gray_blur, [contour], -1, (255, 0, 255), 2)
 
             circles = cv2.HoughCircles(img_gray_blur, cv2.HOUGH_GRADIENT, 1, img_gray_blur.shape[0] / 20, param1=8,
                                        param2=13, minRadius=0, maxRadius=int(length / 15))
-            angle = circles.shape[1] / 2
 
-            if angle == 1:
+            if circles is None:
                 result = shape_enum.shapeEnum.CIRCLE.name
-            elif angle == 2:
+            elif convex(image_url) > 1.3 or convex(image_url) < 0.7:
                 result = shape_enum.shapeEnum.ELLIPSE.name
-            elif angle == 3:
-                result = shape_enum.shapeEnum.TRIANGLE.name
-            elif angle == 4:
-                result = shape_enum.shapeEnum.SQUARE.name
-            elif angle == 5:
-                result = shape_enum.shapeEnum.PENTAGON.name
-            elif angle == 6:
-                result = shape_enum.shapeEnum.HEXAGON.name
-            elif angle == 8:
-                result = shape_enum.shapeEnum.OCTAGON.name
+            else:
+                angle = circles.shape[1]
+                if angle == 1:
+                    result = shape_enum.shapeEnum.CIRCLE.name
+                elif angle == 2:
+                    result = shape_enum.shapeEnum.ELLIPSE.name
+                elif angle == 3:
+                    result = shape_enum.shapeEnum.TRIANGLE.name
+                elif angle == 4:
+                    result = shape_enum.shapeEnum.SQUARE.name
+                elif angle == 5:
+                    result = shape_enum.shapeEnum.PENTAGON.name
+                elif angle == 6:
+                    result = shape_enum.shapeEnum.HEXAGON.name
+                elif angle == 8:
+                    result = shape_enum.shapeEnum.OCTAGON.name
         else:
             if vtc == 3:
                 result = shape_enum.shapeEnum.TRIANGLE.name
@@ -93,8 +119,6 @@ def get_shape_from_file(image_url):
     IMAGE_DIR = os.path.join(BASE_DIR, 'shape')
     detected_shape_image_name = file_name_generator.make_detected_image_name()
     file_path = os.path.join(IMAGE_DIR, detected_shape_image_name)
-    # plt.imshow(img_input)
-    # plt.imshow(img_gray)
     plt.imshow(img_gray_blur)
     plt.savefig(file_path)
 
