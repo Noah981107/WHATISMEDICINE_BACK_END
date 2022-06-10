@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import cv2
 import numpy as np
 import requests
@@ -12,7 +14,7 @@ from service import s3_service
 def validation(mask):
     mask = np.array(mask)
     for i in range(len(mask)):
-        if mask[i].sum() > 65000:
+        if mask[i].sum() > 10000:
             return True
     return False
 
@@ -59,7 +61,9 @@ def get_color_from_file(image_url):
     mask_purple = cv2.inRange(hsv, lower_purple, upper_purple)
     mask_gray = cv2.inRange(hsv, lower_gray, upper_gray)
 
-    mask_imgs = {color_enum.colorEnum.WHITE.name: mask_white,
+    mask_imgs = {color_enum.colorEnum.GRAY.name: mask_gray,
+                 color_enum.colorEnum.BLUE.name: mask_blue,
+                 color_enum.colorEnum.WHITE.name: mask_white,
                  color_enum.colorEnum.YELLOW.name: mask_yellow,
                  color_enum.colorEnum.ORANGE.name: mask_orange,
                  color_enum.colorEnum.PINK.name: mask_pink,
@@ -67,9 +71,7 @@ def get_color_from_file(image_url):
                  color_enum.colorEnum.BROWN.name: mask_brown,
                  color_enum.colorEnum.GREEN.name: mask_green,
                  color_enum.colorEnum.TURQUOISE.name: mask_turquoise,
-                 color_enum.colorEnum.BLUE.name: mask_blue,
-                 color_enum.colorEnum.PURPLE.name: mask_purple,
-                 color_enum.colorEnum.GRAY.name: mask_gray}
+                 color_enum.colorEnum.PURPLE.name: mask_purple}
 
     is_detected = False
     color_result = ()

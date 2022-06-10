@@ -41,8 +41,6 @@ def upload_image():
     result_json = search_service.search_drugs(shape_image_url, shape_name, color_image_url, color_name, ocr_image_url,
                                               shape_code, color_code, ocr_result)
 
-    print(result_json)
-
     return Response(result_json, mimetype='application/json', status=200)
 
 
@@ -62,4 +60,8 @@ def handle_error(e):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
