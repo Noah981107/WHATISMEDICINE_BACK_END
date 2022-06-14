@@ -43,4 +43,4 @@
 
 
 3. **약 정보 검색 결과**  
-![이미지 분석](https://user-images.githubusercontent.com/76483681/171445411-1b2e69d1-d1d0-4b60-8098-9a7b3423635e.jpg)
+![](https://user-images.githubusercontent.com/76483681/173476241-49753a27-b5d7-4c40-82e7-90b371932003.jpg)
