@@ -12,6 +12,7 @@ def search_drugs(shape_image_url, shape_name,
                  shape_code, color_code, ocr_result):
 
     result = []
+    shape_code = ''
 
     request_url = 'https://terms.naver.com/medicineSearch.naver?mode=exteriorSearch&shape=' + shape_code + \
                   '&color=' + color_code + \
