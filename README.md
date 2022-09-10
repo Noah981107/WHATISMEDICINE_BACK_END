@@ -30,6 +30,7 @@
  - Flask
  - OpenCV
  - AWS EC2
+ - AWS S3
 
 
 ## 이약뭐약 웹 사이트
